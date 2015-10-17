@@ -1,0 +1,35 @@
+{
+  "name": "inject-decorators",
+  "version": "0.0.0",
+  "description": "simple dependency injector",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib --source-maps-inline",
+    "watch": "babel src --out-dir lib --watch --source-maps-inline",
+    "test": "mocha --compilers js:espower-babel/guess test/*.spec.js"
+  },
+  "files": ["lib"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/k-kinzal/inject-decorators.git"
+  },
+  "keywords": [
+    "dependency",
+    "inject",
+    "decorators"
+  ],
+  "author": "k-kinzal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/k-kinzal/inject-decorators/issues"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "espower-babel": "^3.3.0",
+    "espower-loader": "^0.11.0",
+    "lodash": "^3.10.1",
+    "mocha": "^2.2.5",
+    "power-assert": "^0.11.0",
+    "source-map-support": "^0.3.1"
+  }
+}

@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- '4.0'
+- '4.1'
+sudo: false
+cache:
+  directories:
+  - node_modules
+script:
+- npm build
+- npm test
+deploy:
+  provider: npm
+  email: log@logn.in
+  api_key:
+    secure: d8gZ8uW1YSIlq+3Djs1fs3QAA9JR+MdZFoimCb0zBNvAg7fg0yoRLrLSemYjtP2u9fVk7AQBY+FFQ+Dg+aOLMf1kzEyRbYEVHgFoAsDZiK0BqYoQEVXyOuGEbF2sqd0b165ACJRQU3jWhyDtBzd1VMl77GNDeY64I2WZH2lc6sSDzE0ZG44g4yufOZh/R/tqWMXbknG3u+mZjiAA9a4Hyq+3TF/3c191nM67kniMAMtZDyV1d54izX69I+zb/10HODklgSUqfDCOOWkGftDYvp7UpzQt0EGiHtyiYjnO98du5dKA+vJqlDXGvo2SkP5WGCqSZR7+8Lp/ut9W5kbXPXb9K7hISsecyQLzkwdOuoO1nV7rvKPiVTmgv4DzleDPxbKFFmGj8E7vrqHxjbuEgVvNL2WVItBbv8gccO/h1sDeI/hXdiH5Gb1oUcaUBoJ7Hcns9sgOO80LY63FdD7bgXRJ7cEEzr3vcdO2A0Dg7OBz4UqmppaPSHPB6e+MR/KYzt5epJo16sGAeohTiULa+rRMbVD7Biwm8+U0qHNe7eLnAHSub53+Tb/fUbVo7LGGTqQrdlTvZOCxid+3QoqFVmKo+RaetIvl0pVPySXQR/nOzGCFxE17XNyPiki/cbMLHn8d8+136vhajl0QUyTkb3fCg2J1lST3YrdsrCGZRJo=
+  on:
+    tags: true
+    repo: k-kinzal/inject-decorators
