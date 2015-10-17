@@ -17,3 +17,4 @@ deploy:
   on:
     tags: true
     repo: k-kinzal/inject-decorators
+  skip_cleanup: true
