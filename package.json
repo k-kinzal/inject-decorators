@@ -2,7 +2,7 @@
   "name": "inject-decorators",
   "version": "0.1.1",
   "description": "simple dependency injector",
-  "main": "src/index.js",
+  "main": "libs/index.js",
   "scripts": {
     "build": "babel src --out-dir lib --source-maps-inline",
     "watch": "babel src --out-dir lib --watch --source-maps-inline",
