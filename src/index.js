@@ -5,7 +5,7 @@ import _ from 'lodash';
 export default function Inject(...dependencies) {
   return (target) => {
     let depends = Array.from(dependencies).map((v) => {
-      if (_.isFunction(v) && v.name.match(/^([A-Z]|bound [A-Z]|bound constructor)/)) {
+      if (_.isFunction(v) && v.name.match(/^([A-Z]|constructor)/)) {
         return new v();
       } else {
         return v;
@@ -13,28 +13,36 @@ export default function Inject(...dependencies) {
     });
     let stringDepends = dependencies.filter((v) => _.isString(v));
 
-    let constructor = function() {
-      var args = Array.from(arguments);
-      if (args.length > dependencies.length) {
-        args = args.slice(dependencies.length);
-        if (args.length === stringDepends.length) {
-          args = Array.from(arguments).slice(0, dependencies.length).map((v) => {
-            if (args.length > 0 && _.isString(v)) {
-              return args.shift();
-            } else {
-              return v;
-            }
-          });
-        }
-
+    let Constructor = function() {
+      var args = arguments.length > 0 ? Array.from(arguments) : depends;
+      if (arguments.length === stringDepends.length) {
+        args = depends.map((v) => {
+          if (args.length > 0 && _.isString(v)) {
+            return args.shift();
+          } else {
+            return v;
+          }
+        });
       }
-      return new target(...args);
+
+      target.prototype.constructor.apply(this, args);
     };
-    constructor.prototype = target.prototype;
+    
+    Object.setPrototypeOf(Constructor, target);
+    Constructor.prototype = Object.create(target.prototype, {
+      constructor: {
+        value: Constructor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
 
-    let c = constructor.bind(undefined, ...depends);
-    c.$inject = stringDepends;
+    Object.defineProperty(Constructor, 'name', {writable: true});
+    Constructor.name = target.name;
 
-    return c;
+    Constructor.$inject = stringDepends;
+
+    return Constructor;
   };
 }

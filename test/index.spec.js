@@ -11,6 +11,7 @@ describe('Inject:', () => {
     let foo = new Foo();
 
     assert(foo instanceof Foo);
+    assert(foo.constructor.name === 'Foo');
   });
 
   it('should primitive type is to be injected into the constructor', () => {
@@ -133,6 +134,70 @@ describe('Inject:', () => {
     let foo = new Foo(2);
 
     assert(foo.num === 2);
+  });
+
+  it('should be able to inject to the constructor override arguments', () => {
+    @Inject(1)
+    class Foo {
+      constructor(num) {
+        this.num = num;
+      }
+    };
+
+    let foo = new Foo(2);
+
+    assert(foo.num === 2);
+  });
+
+  it('should be able to inject to the constructor of the inherited class', () => {
+    let num1 = 1;
+    let num2 = 2;
+
+    class Foo {
+      constructor(num) {
+        this.num1 = num;
+      }
+    };
+    
+    @Inject(num1, num2)
+    class Bar extends Foo {
+      constructor(num1, num2) {
+        super(num1);
+
+        this.num2 = num2;
+      }
+    }
+
+    let bar = new Bar();
+
+    assert(bar.num1 === num1);
+    assert(bar.num2 === num2);
+  });
+
+  it('should be able to inject the parent class of the inherited class', () => {
+    let num1 = 1;
+    let num2 = 2;
+
+    @Inject(num1)
+    class Foo {
+      constructor(num) {
+        this.num1 = num;
+      }
+    };
+    
+    @Inject(num2)
+    class Bar extends Foo {
+      constructor(num2) {
+        super();
+
+        this.num2 = num2;
+      }
+    }
+
+    let bar = new Bar();
+
+    assert(bar.num1 === num1);
+    assert(bar.num2 === num2);
   });
 
   it('should support $inject property in angular', (done) => {
