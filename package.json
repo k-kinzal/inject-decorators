@@ -8,7 +8,9 @@
     "watch": "babel src --out-dir lib --watch --source-maps-inline",
     "test": "mocha --compilers js:espower-babel/guess test/*.spec.js"
   },
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/k-kinzal/inject-decorators.git"
@@ -27,6 +29,7 @@
     "babel": "^5.8.23",
     "espower-babel": "^3.3.0",
     "espower-loader": "^0.11.0",
+    "jsdom": "^6.5.1",
     "lodash": "^3.10.1",
     "mocha": "^2.2.5",
     "power-assert": "^0.11.0",

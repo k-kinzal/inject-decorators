@@ -15,7 +15,7 @@ describe('Inject:', () => {
 
   it('should primitive type is to be injected into the constructor', () => {
     let num = 1;
-    let str = "abc";
+    let str = 'abc';
     let bool = true;
     let symbol = Symbol();
 
@@ -134,5 +134,36 @@ describe('Inject:', () => {
 
     assert(foo.num === 2);
   });
+
+  it('should support $inject property in angular', (done) => {
+    let num = 1;
+    let obj = obj;
+
+    @Inject(num, '$rootScope', obj)
+    class Foo {
+      constructor(num, $scope, obj) {
+        this.num = num;
+        this.$scope = $scope;
+        this.obj = obj;
+      }
+    }
+
+    let jsdom = require('jsdom');
+    jsdom.env(
+      '<html ng-app="app"></html>',
+      ['https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js'],
+      function (err, window) {
+        let module = window.angular.module('app', []);
+        module.service('foo', Foo);
+        module.run(function(foo) {
+          assert(foo.$scope.constructor.name === 'n');
+          assert(foo.num === num);
+          assert(foo.obj === obj);
+          done();
+        });
+      }
+    );
+
+  })
 
 });
