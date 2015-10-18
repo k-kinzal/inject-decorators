@@ -184,20 +184,50 @@ describe('Inject:', () => {
         this.num1 = num;
       }
     };
+
+    class Bar extends Foo { }
     
     @Inject(num2)
-    class Bar extends Foo {
-      constructor(num2) {
-        super();
+    class Baz extends Bar {
+      constructor(num1, num2) {
+        super(num1);
 
         this.num2 = num2;
       }
     }
 
-    let bar = new Bar();
+    let baz = new Baz();
 
-    assert(bar.num1 === num1);
-    assert(bar.num2 === num2);
+    assert(baz.num1 === num1);
+    assert(baz.num2 === num2);
+  });
+
+  it('should be able to override arguments the injected into the inherited parent class', () => {
+    let num1 = 1;
+    let num2 = 2;
+
+    @Inject(num1)
+    class Foo {
+      constructor(num) {
+        this.num1 = num;
+      }
+    };
+
+    class Bar extends Foo { }
+    
+    @Inject(num2)
+    class Baz extends Bar {
+      constructor(num1, num2) {
+        super(num1);
+
+        this.num2 = num2;
+      }
+    }
+
+    let baz = new Baz(3, 4);
+
+    assert(baz.num1 === 3);
+    assert(baz.num2 === 4);
   });
 
   it('should support $inject property in angular', (done) => {

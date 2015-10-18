@@ -4,8 +4,8 @@ import _ from 'lodash';
 
 export default function Inject(...dependencies) {
   return (target) => {
-    let depends = Array.from(dependencies).map((v) => {
-      if (_.isFunction(v) && v.name.match(/^([A-Z]|constructor)/)) {
+    let depends = aggregatParentDependencies(target, Array.from(dependencies)).map((v) => {
+      if (_.isFunction(v) && v.name.match(/^([A-Z])/)) {
         return new v();
       } else {
         return v;
@@ -27,7 +27,7 @@ export default function Inject(...dependencies) {
 
       target.prototype.constructor.apply(this, args);
     };
-    
+
     Object.setPrototypeOf(Constructor, target);
     Constructor.prototype = Object.create(target.prototype, {
       constructor: {
@@ -35,14 +35,28 @@ export default function Inject(...dependencies) {
         enumerable: false,
         writable: true,
         configurable: true
-      }
+      }, 
     });
 
     Object.defineProperty(Constructor, 'name', {writable: true});
     Constructor.name = target.name;
 
+    Constructor.$$dependencies = depends;
     Constructor.$inject = stringDepends;
 
     return Constructor;
   };
+}
+
+function aggregatParentDependencies(target, dependencies) {
+  if ('$$dependencies' in target) {
+    let depends = target.$$dependencies || [];
+    depends.forEach((v) => {
+      dependencies.unshift(v);
+    });
+
+    dependencies = aggregatParentDependencies(target.prototype, dependencies);
+  }
+
+  return dependencies;
 }
