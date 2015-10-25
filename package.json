@@ -26,6 +26,7 @@
     "url": "https://github.com/k-kinzal/inject-decorators/issues"
   },
   "devDependencies": {
+    "angular-decorators": "^1.1.0",
     "babel": "^5.8.23",
     "espower-babel": "^3.3.0",
     "espower-loader": "^0.11.0",

@@ -198,6 +198,9 @@ describe('Inject:', () => {
 
     let baz = new Baz();
 
+    assert(baz instanceof Baz);
+    assert(baz instanceof Bar);
+    assert(baz instanceof Foo);
     assert(baz.num1 === num1);
     assert(baz.num2 === num2);
   });
@@ -232,7 +235,7 @@ describe('Inject:', () => {
 
   it('should support $inject property in angular', (done) => {
     let num = 1;
-    let obj = obj;
+    let obj = {};
 
     @Inject(num, '$rootScope', obj)
     class Foo {
@@ -259,6 +262,41 @@ describe('Inject:', () => {
       }
     );
 
-  })
+  });
+
+  it('should support $inject property in angular-decorators', (done) => {
+    var decorators = require('angular-decorators');
+
+    let num = 1;
+    let obj = {};
+
+    @decorators.Service('foo')
+    @Inject(num, '$rootScope', obj)
+    class Foo {
+      constructor(num, $scope, obj) {
+        this.num = num;
+        this.$scope = $scope;
+        this.obj = obj;
+      }
+    }
+
+    let jsdom = require('jsdom');
+    jsdom.env(
+      '<html ng-app="app"></html>',
+      ['https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js'],
+      function (err, window) {
+        global.angular = window.angular;
+
+        var module = decorators.Module('app', []).add(Foo).publish();
+        module.run(function(foo) {
+          assert(foo.$scope.constructor.name === 'n');
+          assert(foo.num === num);
+          assert(foo.obj === obj);
+          done();
+        });
+      }
+    );
+
+  });
 
 });

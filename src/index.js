@@ -43,6 +43,11 @@ export default function Inject(...dependencies) {
 
     Constructor.$$dependencies = depends;
     Constructor.$inject = stringDepends;
+    try {
+      let decorators = require('angular-decorators');
+      decorators.Inject(...stringDepends)(Constructor);
+    } catch (e) {
+    }
 
     return Constructor;
   };
